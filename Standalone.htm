@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style media="screen">
+    * {
+      display: block;
+      padding: 0px;
+      margin: 7px;
+    }
+
+    header {
+      font-weight: bold;
+      font-size: 30px;
+    }
+    style, script{
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    Legion's optimal 360 distance calculator
+  </header>
+  <h3>Works for all units so you can use both cm and inches, just be sure to be consistent while entering units or it will be inaccurate</h3>
+  <br>
+  <div class="Container">
+
+    <h4>Distance from mouse sensor to the center of your wrist joint</h4>
+    <input id="Wristrad" type="text" onchange="formChanged()" type="number" step="0.01" />
+    <h4>Distance from eyes to monitor</h4>
+    <input id="objdistance" type="text" onchange="formChanged()" type="number" step="0.01" />
+    <h4>In game hFov</h4>
+    <input id="hfov" type="text" onchange="formChanged()" type="number" step="0.01" />
+    <h4>Diagonal size of monitor</h4>
+    <input id="monitordiagonal" type="text" onchange="formChanged()" type="number" step="0.01" />
+    <h4>Montior aspect ratio</h4>
+  </div>
+
+
+  <select onchange="formChanged()" id="aspect">
+    <option value="16,9">16:9</option>
+    <option value="16,10">16:10</option>
+    <option value="3,4">3:4</option>
+    <option value="21,9">21:9</option>
+  </select>
+  <h1>output</h1>
+  <h4>Rasterized aspect ratio</h4>
+  <p id="AspectRatio">Null</p>
+  <h4>Width of montior</h4>
+  <p id="width">Null</p>
+  <h4>Height of monitor</h4>
+  <p id="height">Null</p>
+  <h4>Feild of view that the monitor takes up in degrees</h4>
+  <p id="angle">Null</p>
+  <h4>Arc length in degrees</h4>
+  <p id="idarcl">Null</p>
+  <br>
+  <h2>Optimal 360 Distance</h2>
+  <h3 id="idhfov">Null</h3>
+
+
+
+<script type="text/javascript">
+var a;
+var d;
+var objdistance;
+var opt;
+var r;
+
+function formChanged() {
+  r = document.getElementById("Wristrad").value;
+  fov = document.getElementById("hfov").value;
+  objdistance = document.getElementById("objdistance").value;
+  d = document.getElementById("monitordiagonal").value;
+
+  var e = document.getElementById("aspect");
+  var valsrt = e.options[e.selectedIndex].value;
+  const [a1, a2] = valsrt.split(',');
+
+  var ar = a1 / a2;
+  var x = Math.sqrt(ar * ar + 1);
+  var h = d / x;
+  var w = (h / a2) * a1;
+  var objwidth = w;
+  var f = Math.sqrt(((objwidth) * .5) * ((objwidth) * .5) + objdistance * objdistance);
+  var ang = (Math.asin(w * .5 / f)) * 180 / Math.PI * 2
+  document.getElementById("AspectRatio").innerHTML = ar;
+  document.getElementById("height").innerHTML = h;
+  document.getElementById("width").innerHTML = w;
+  document.getElementById("angle").innerHTML = ang;
+  var arcl = (ang * 2 * Math.PI * r) / 360
+  document.getElementById("idarcl").innerHTML = arcl;
+  hfov = arcl*(360/fov);
+    document.getElementById("idhfov").innerHTML = hfov;
+}
+
+</script>
+</body>
+
+</html>
